@@ -68,12 +68,12 @@ type OpenidClientAttributes struct {
 	ExcludeIssuerFromAuthResponse            types.KeycloakBoolQuoted         `json:"exclude.issuer.from.auth.response"`
 	AccessTokenLifespan                      string                           `json:"access.token.lifespan"`
 	LoginTheme                               string                           `json:"login_theme"`
-	ClientOfflineSessionIdleTimeout          string                           `json:"client.offline.session.idle.timeout,omitempty"`
+	ClientOfflineSessionIdleTimeout          string                           `json:"client.offline.session.idle.timeout"`
 	DisplayOnConsentScreen                   types.KeycloakBoolQuoted         `json:"display.on.consent.screen"`
 	ConsentScreenText                        string                           `json:"consent.screen.text"`
-	ClientOfflineSessionMaxLifespan          string                           `json:"client.offline.session.max.lifespan,omitempty"`
-	ClientSessionIdleTimeout                 string                           `json:"client.session.idle.timeout,omitempty"`
-	ClientSessionMaxLifespan                 string                           `json:"client.session.max.lifespan,omitempty"`
+	ClientOfflineSessionMaxLifespan          string                           `json:"client.offline.session.max.lifespan"`
+	ClientSessionIdleTimeout                 string                           `json:"client.session.idle.timeout"`
+	ClientSessionMaxLifespan                 string                           `json:"client.session.max.lifespan"`
 	UseRefreshTokens                         types.KeycloakBoolQuoted         `json:"use.refresh.tokens"`
 	UseRefreshTokensClientCredentials        types.KeycloakBoolQuoted         `json:"client_credentials.use_refresh_token"`
 	BackchannelLogoutUrl                     string                           `json:"backchannel.logout.url"`

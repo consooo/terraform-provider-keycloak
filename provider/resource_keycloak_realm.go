@@ -433,13 +433,13 @@ func resourceKeycloakRealm() *schema.Resource {
 			"client_session_idle_timeout": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Computed:         true,
+				Default:          "0s",
 				DiffSuppressFunc: suppressDurationStringDiff,
 			},
 			"client_session_max_lifespan": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				Computed:         true,
+				Default:          "0s",
 				DiffSuppressFunc: suppressDurationStringDiff,
 			},
 			"access_token_lifespan": {

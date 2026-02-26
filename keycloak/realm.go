@@ -63,8 +63,8 @@ type Realm struct {
 	OfflineSessionIdleTimeout           int    `json:"offlineSessionIdleTimeout,omitempty"`
 	OfflineSessionMaxLifespan           int    `json:"offlineSessionMaxLifespan,omitempty"`
 	OfflineSessionMaxLifespanEnabled    bool   `json:"offlineSessionMaxLifespanEnabled,omitempty"`
-	ClientSessionIdleTimeout            int    `json:"clientSessionIdleTimeout,omitempty"`
-	ClientSessionMaxLifespan            int    `json:"clientSessionMaxLifespan,omitempty"`
+	ClientSessionIdleTimeout            int    `json:"clientSessionIdleTimeout"`
+	ClientSessionMaxLifespan            int    `json:"clientSessionMaxLifespan"`
 	AccessTokenLifespan                 int    `json:"accessTokenLifespan,omitempty"`
 	AccessTokenLifespanForImplicitFlow  int    `json:"accessTokenLifespanForImplicitFlow,omitempty"`
 	AccessCodeLifespan                  int    `json:"accessCodeLifespan,omitempty"`

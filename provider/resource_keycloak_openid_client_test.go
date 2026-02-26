@@ -371,6 +371,60 @@ func TestAccKeycloakOpenidClient_ClientTimeouts_basic(t *testing.T) {
 	})
 }
 
+func TestAccKeycloakOpenidClient_ClientTimeouts_revert(t *testing.T) {
+	t.Parallel()
+	clientId := acctest.RandomWithPrefix("tf-acc")
+
+	offlineSessionIdleTimeout := "180"
+	offlineSessionMaxLifespan := "190"
+	sessionIdleTimeout := "200"
+	sessionMaxLifespan := "210"
+
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: testAccProviderFactories,
+		PreCheck:          func() { testAccPreCheck(t) },
+		CheckDestroy:      testAccCheckKeycloakOpenidClientDestroy(),
+		Steps: []resource.TestStep{
+			{
+				Config: testKeycloakOpenidClient_ClientTimeouts(clientId,
+					offlineSessionIdleTimeout, offlineSessionMaxLifespan, sessionIdleTimeout, sessionMaxLifespan),
+				Check: testAccCheckKeycloakOpenidClientExistsWithCorrectClientTimeouts("keycloak_openid_client.client",
+					offlineSessionIdleTimeout, offlineSessionMaxLifespan, sessionIdleTimeout, sessionMaxLifespan,
+				),
+			},
+			{
+				Config: testKeycloakOpenidClient_basic(clientId),
+				Check: testAccCheckKeycloakOpenidClientExistsWithCorrectClientTimeouts("keycloak_openid_client.client",
+					"", "", "", "",
+				),
+			},
+		},
+	})
+}
+
+func TestAccKeycloakOpenidClient_AccessToken_revert(t *testing.T) {
+	t.Parallel()
+	clientId := acctest.RandomWithPrefix("tf-acc")
+
+	accessTokenLifespan := "1800"
+
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: testAccProviderFactories,
+		PreCheck:          func() { testAccPreCheck(t) },
+		CheckDestroy:      testAccCheckKeycloakOpenidClientDestroy(),
+		Steps: []resource.TestStep{
+			{
+				Config: testKeycloakOpenidClient_AccessToken_basic(clientId, accessTokenLifespan),
+				Check:  testAccCheckKeycloakOpenidClientExistsWithCorrectLifespan("keycloak_openid_client.client", accessTokenLifespan),
+			},
+			{
+				Config: testKeycloakOpenidClient_basic(clientId),
+				Check:  testAccCheckKeycloakOpenidClientExistsWithCorrectLifespan("keycloak_openid_client.client", ""),
+			},
+		},
+	})
+}
+
 func TestAccKeycloakOpenidClient_Device_basic(t *testing.T) {
 	if ok, _ := keycloakClient.VersionIsGreaterThanOrEqualTo(testCtx, keycloak.Version_13); !ok {
 		t.Skip()

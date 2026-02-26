@@ -433,6 +433,36 @@ func TestAccKeycloakRealm_tokenSettings(t *testing.T) {
 	})
 }
 
+func TestAccKeycloakRealm_clientSessionSettingsRevert(t *testing.T) {
+	realmName := acctest.RandomWithPrefix("tf-acc")
+	realmDisplayName := acctest.RandomWithPrefix("tf-acc")
+	realmDisplayNameHtml := acctest.RandomWithPrefix("tf-acc")
+
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: testAccProviderFactories,
+		PreCheck:          func() { testAccPreCheck(t) },
+		CheckDestroy:      testAccCheckKeycloakRealmDestroy(),
+		Steps: []resource.TestStep{
+			{
+				Config: testKeycloakRealm_clientSessionSettings(realmName, realmDisplayName, realmDisplayNameHtml, "7m0s", "1h10m42s"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKeycloakRealmExists("keycloak_realm.realm"),
+					resource.TestCheckResourceAttr("keycloak_realm.realm", "client_session_idle_timeout", "7m0s"),
+					resource.TestCheckResourceAttr("keycloak_realm.realm", "client_session_max_lifespan", "1h10m42s"),
+				),
+			},
+			{
+				Config: testKeycloakRealm_basic(realmName, realmDisplayName, realmDisplayNameHtml),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKeycloakRealmExists("keycloak_realm.realm"),
+					resource.TestCheckResourceAttr("keycloak_realm.realm", "client_session_idle_timeout", "0s"),
+					resource.TestCheckResourceAttr("keycloak_realm.realm", "client_session_max_lifespan", "0s"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccKeycloakRealm_tokenSettingsOauth2Device(t *testing.T) {
 	if ok, _ := keycloakClient.VersionIsGreaterThanOrEqualTo(testCtx, keycloak.Version_13); !ok {
 		t.Skip()
@@ -1924,4 +1954,17 @@ resource "keycloak_realm" "realm" {
   display_name_html = "%s"
 }
 `, realm, displayName, displayNameHtml)
+}
+
+func testKeycloakRealm_clientSessionSettings(realm, displayName, displayNameHtml, idleTimeout, maxLifespan string) string {
+	return fmt.Sprintf(`
+resource "keycloak_realm" "realm" {
+	realm                       = "%s"
+	enabled                     = true
+	display_name                = "%s"
+	display_name_html           = "%s"
+	client_session_idle_timeout = "%s"
+	client_session_max_lifespan = "%s"
+}
+`, realm, displayName, displayNameHtml, idleTimeout, maxLifespan)
 }
